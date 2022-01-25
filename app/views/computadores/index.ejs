@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/boostrap.min.css">
+    <script src="https://kit.fontawesome.com/f7e339246b.js" crossorigin="anonymous"></script>
+    <title>Computadores</title>
+</head>
+<body id="body">
+    <header>
+        <nav class="">
+            <div class="row d-flex justify-content-between">
+                <div class="col-4 mt-2">
+                    <a href="#" class="btn btn-primary">
+                        <span class="user_span">
+                            <i class="fas fa-user"></i>
+                        </span>
+                       <span class="user_span_text"><%= usuario %></span>
+                    </a>
+                    <a class="btn btn-danger" href="/sair">
+                        <span class="user_span">
+                            <i class="fas fa-user-times"></i>
+                        </span>
+                        <span class="user_span_text">
+                            Sair
+                        </span>
+                    </a>
+                </div>
+                <div class="col-4 mt-4">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="/deposito" role="tab" aria-controls="pills-profile" aria-selected="false">Depósito</a>
+                        </li>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                              Computadores
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="/computadores/adicionar">Adicionar Computador</a></li>
+                              <li><a class="dropdown-item" href="/computadores/locais">Locais</a></li>
+                              <li><a class="dropdown-item" href="/computadores/setores">Setores</a></li>
+                            </ul>
+                        </div>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="/retiradas" role="tab" aria-controls="pills-contact" aria-selected="false">Retiradas</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="row justify-content-center mt-3">
+            <div class="col-auto">
+                <table class="table table-striped border border-primary">
+                    <tr class="text-center" id="header">
+                        <th>Local</th>
+                        <th>Setor</th>
+                        <th>Processador</th>
+                        <th>RAM (GB)</th>
+                        <th>Armazenamento(GB)</th>
+                        <th>Modelo Gabinete</th>
+                        <th>Tipo Armazenamento</th>
+                        <th>Ações</th>
+                    </tr>
+
+                    <% for(let i = 0; i < computadores.length; i++) { %>
+                        <tr>
+                            <td class="text-left border-top-0 border-bottom-0"><%= computadores[i].nome_localizacao %></td>
+                            <td class="text-center border-top-0 border-bottom-0"><%= computadores[i].nome_setor %></td>
+                            <td class="text-center border-top-0 border-bottom-0"><%= computadores[i].processador %></td>
+                            <td class="text-center border-top-0 border-bottom-0"><%= computadores[i].ram %></td>
+                            <td class="text-center border-top-0 border-bottom-0"><%= computadores[i].armazenamento %></td>
+                            <td class="text-center border-top-0 border-bottom-0"><%= computadores[i].modelo_gabinete %></td>
+                            <td class="text-center border-top-0 border-bottom-0"><%= computadores[i].tipo_armazenamento %></td>
+                            <td class="text-center border-top-0 border-bottom-0">
+                                <div class="row justify-content-center">
+                                    <div class="col-5 d-flex">
+                                        <a class="btn btn-warning m-1" href="/computadores/editar?id=<%= computadores[i].id %>" value="<%= computadores[i].id %>" name="id" id="id">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                        <a class="btn btn-danger m-1" href="/computadores/excluir?id=<%= computadores[i].id %>" value="<%= computadores[i].id %>" name="id" id="id">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                        
+                                    <div class="col-3 m-2">
+                                        <div class="d-none">
+                                            <a type="number" value="<%= computadores[i].id %>" name="id" id="id">Excluir</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    <% } %>
+                </table>
+
+            </div>
+        </div>
+    </main>
+       
+    <footer class="mt-2 bg-sepaco-light bg-gradient">
+        <div class="container">
+            <div class="row">
+                <div class="col-6 d-flex align-itemns-center">
+                    <div class="img">
+                        <img src="/images/sepaco-paineiras-escuro.png" alt="Logo Paineiras" title="Logo Paineiras" class="img-fluid">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <h5>Hospital Paineiras</h5>
+
+                    <p>
+                        <i class="fas fa-map-marker-alt"></i>
+                        Av. dos Eucaliptos, 08 - Jd. dos Eucaliptos - Itabatã / Mucuri - BA
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+header {
+    background-color: #0c1d47;
+}
+
+#body {
+    background-color: rgba(152, 225, 247, 0.342);
+}
+
+footer {
+    padding: 10px;
+    color: white;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+footer .container {
+    margin-top: 10px;
+}
+
+tr#header {
+    font-size: 16px;
+    
+    background-color: rgba(103, 187, 212, 0.712);
+}
+
+#buttons-top {
+    margin-right: 10px;
+}
+
+
+th {
+    font-weight: bold;
+}
+
+nav a {
+    border: 1px inset rgb(25, 17, 141);
+    padding: 8px;
+    border-radius: 10px;
+}
+
+#actions a {
+    margin-left: 5px;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+.bg-sepaco-light {
+    background-color: #00395c;
+}
+
+.bg-sepaco-dark {
+    background-color: #0c1d47;
+}
+
+.user_span {
+    border-right: 1px solid black;
+}
+
+.user_span_text {
+    margin-left: 3px;
+}
