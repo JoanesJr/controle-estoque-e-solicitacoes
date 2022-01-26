@@ -71,7 +71,7 @@ module.exports.reduzirItem = (application, req, res) => {
                 usuario : req.session.usuario
     
             };
-            application.app.controllers.retirada.addRetirada(application, retirada);
+            application.app.controllers.retiradas.retirada.addRetirada(application, retirada);
             res.redirect('/deposito');
         });
     });
