@@ -7,8 +7,28 @@ module.exports.modelo = (application, req, res) => {
     let modelModelo = new application.app.models.Modelo(connection);
     let usuario = req.session.usuario;
 
-    modelModelo.getAll((error, result) => {
-        res.render('deposito/modelo/modelos', {modelos : result, usuario : usuario});
+    let limit = {
+        inicio : 0,
+        final : 8
+    };
+
+    modelModelo.getPaginacao(limit, (error, resultPaginacao) => {
+        if(resultPaginacao === undefined) {
+            resultPaginacao = {};
+        }
+
+        modelModelo.getCount((error, result) => {
+            let numeroLinhas = result[0].num_rows;
+            let quantidadePaginas;
+
+            if (numeroLinhas % 8 == 0) {
+                quantidadePaginas = numeroLinhas/8;
+            }else {
+                quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
+            }
+
+            res.render('deposito/modelo/modelos', {modelos : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+        });     
     });
     
 }
@@ -100,5 +120,41 @@ module.exports.getModeloCategoria = (application, req, res) => {
 
     modelModelo.getModeloCategoria(categoria, (error, result) => {
         res.json(result);
+    });
+}
+
+module.exports.pagina = (application, req, res) => {
+    let paginaDestino = req.query.pagina;
+    let limit = {};
+    if (paginaDestino == 1) {
+        limit = {
+            inicio : 0,
+            final : 8
+        };
+    }else {
+        limit = {
+            inicio : paginaDestino * 8 - 8,
+            final : 8
+        };
+    
+    }
+
+    let usuario = req.session.usuario;
+    let connection = application.config.database();
+    let modelModelo = new application.app.models.Modelo(connection);
+
+    modelModelo.getPaginacao(limit, (error, resultPaginacao) => {
+        modelModelo.getCount((error, resultCount) => {
+            let numeroLinhas = resultCount[0].num_rows;
+            let quantidadePaginas;
+
+            if (numeroLinhas % 8 == 0) {
+                quantidadePaginas = numeroLinhas/8;
+            }else {
+                quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
+            }
+
+            res.render('deposito/modelo/modelos', {modelos : result, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+        });
     });
 }

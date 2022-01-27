@@ -8,8 +8,29 @@ module.exports.index = (application, req, res) => {
     let connection = application.config.database();
     let modelComputador = new application.app.models.Computador(connection);
 
-    modelComputador.getAll((error, result) => {
-        res.render('computadores/index', {computadores : result, validation : {}, usuario : usuario});
+    let limit = {
+        inicio : 0,
+        final : 4
+    };
+
+    modelComputador.getPaginacao(limit, (error, resultComputador) => {
+        if(resultComputador === undefined) {
+            resultComputador = {};
+        }
+
+        modelComputador.getCount((error, result) => {
+            let numeroLinhas = result[0].num_rows;
+            let quantidadePaginas;
+
+            if (numeroLinhas % 4 == 0) {
+                quantidadePaginas = numeroLinhas/4;
+            }else {
+                quantidadePaginas = Math.floor((numeroLinhas+4) / 4);
+            }
+
+
+            res.render('computadores/index', {computadores : resultComputador, validation : {}, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+        }); 
     }); 
 }
 
@@ -86,7 +107,6 @@ module.exports.update = (application, req, res) => {
     let modelComputador = new application.app.models.Computador(connection);
 
     modelComputador.update(form, (error, result) => {
-        console.log(error);
         res.redirect('/computadores');
     });
 }
@@ -116,3 +136,36 @@ module.exports.getSetorLocalizacao = (application, req, res) => {
     });
 }
 
+module.exports.pagina = (application, req, res) => {
+    let paginaDestino = req.query.pagina;
+    let limit = {};
+    if (paginaDestino == 1) {
+        limit = {
+            inicio : 0,
+            final : 4
+        };
+    }else {
+        limit = {
+            inicio : paginaDestino * 4 - 4,
+            final : 4
+        };
+    
+    }
+    let connection = application.config.database();
+    let modelComputador = new application.app.models.Computador(connection);
+
+    modelComputador.getPaginacao(limit, (error, resultComputadores) => {
+        modelComputador.getCount((error, resultCount) => {
+            let numeroLinhas = resultCount[0].num_rows;
+            let quantidadePaginas;
+
+            if (numeroLinhas % 4 == 0) {
+                quantidadePaginas = numeroLinhas/4;
+            }else {
+                quantidadePaginas = Math.floor((numeroLinhas+4) / 4);
+            }
+
+            res.render('computadores/index', {computadores : resultComputadores, usuario : req.session.usuario, numeroLinhas : numeroLinhas, quantidadePaginas : quantidadePaginas});
+        });
+    });
+}

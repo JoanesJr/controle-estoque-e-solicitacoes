@@ -22,4 +22,8 @@ module.exports = application => {
     application.post('/deposito/modelos/editar/editar', (req, res) => {
         application.app.controllers.deposito.modelo.update(application, req, res);
     });
+
+    application.get('/deposito/modelos/pagina', (req, res) => {
+        application.app.controllers.deposito.modelo.pagina(application, req, res);
+    });
 }

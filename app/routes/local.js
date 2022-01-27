@@ -22,4 +22,8 @@ module.exports = application => {
     application.get('/computadores/locais/excluir', (req, res) => {
         application.app.controllers.computadores.local.excluir(application, req, res);
     })
+
+    application.get('/computadores/locais/pagina', (req, res) => {
+        application.app.controllers.computadores.local.pagina(application, req, res);
+    });
 };

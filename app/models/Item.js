@@ -6,6 +6,14 @@ Item.prototype.getAll = function(callback) {
     this._connection.query("SELECT i.id, i.nome, i.quantidade, um.nome as nome_unidade_medida, DATE_FORMAT(i.data_item, '%d/%m/%Y') as data_item, c.nome as nome_categoria, m.nome as nome_modelo FROM tb_itens as i INNER JOIN tb_categorias as c ON i.categoria = c.id INNER JOIN tb_unidade_medida as um ON i.unidade_medida = um.id INNER JOIN tb_modelos as m ON i.modelo = m.id ORDER BY nome_categoria ASC, nome ASC, nome_modelo ASC", callback);
 };
 
+Item.prototype.getPaginacao = function(limit, callback) {
+    this._connection.query(`SELECT i.id, i.nome, i.quantidade, um.nome as nome_unidade_medida, DATE_FORMAT(i.data_item, '%d/%m/%Y') as data_item, c.nome as nome_categoria, m.nome as nome_modelo FROM tb_itens as i INNER JOIN tb_categorias as c ON i.categoria = c.id INNER JOIN tb_unidade_medida as um ON i.unidade_medida = um.id INNER JOIN tb_modelos as m ON i.modelo = m.id ORDER BY nome_categoria ASC, nome ASC, nome_modelo ASC LIMIT ${limit.inicio}, ${limit.final}`, callback);
+};
+
+Item.prototype.getCount = function(callback) {
+    this._connection.query("SELECT count(*) as num_rows from tb_itens", callback);
+};
+
 Item.prototype.salvarItem = function(item, callback) {
     this._connection.query("INSERT INTO tb_itens SET ?", item, callback);
 }

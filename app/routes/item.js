@@ -30,4 +30,8 @@ module.exports = application => {
     application.post('/deposito/update', (req, res) => {
         application.app.controllers.deposito.item.update(application, req, res);
     });
+
+    application.get('/deposito/pagina', (req, res) => {
+        application.app.controllers.deposito.item.pagina(application, req, res);
+    });
 }

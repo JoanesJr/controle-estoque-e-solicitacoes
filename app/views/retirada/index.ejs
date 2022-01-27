@@ -70,7 +70,18 @@
                         </tr>
                     <% } %>
                 </table>
+                <% if(quantidadePaginas > 1) {%>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
 
+                        <% for(let i = 1; i <= quantidadePaginas; i++) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="/retiradas/pagina?pagina=<%= i %>"><%= i %></a>
+                            </li>
+                        <% } %>
+                        </ul>
+                    </nav>
+                <% } %>
             </div>
         </div>
     </main>

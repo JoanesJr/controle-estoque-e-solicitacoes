@@ -26,4 +26,8 @@ module.exports = application => {
     application.post('/computadores/salvar', (req, res) => {
         application.app.controllers.computadores.computador.salvar(application, req, res);
     });
+
+    application.get('/computadores/pagina', (req, res) => {
+        application.app.controllers.computadores.computador.pagina(application, req, res);
+    });
 }

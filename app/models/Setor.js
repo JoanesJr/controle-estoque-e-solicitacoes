@@ -6,6 +6,14 @@ Setor.prototype.getAll = function(callback) {
     this._connection.query("SELECT s.id, s.nome, s.localizacao, l.nome as nome_localizacao FROM tb_setores as s INNER JOIN tb_locais as l on s.localizacao = l.id ORDER BY nome ASC", callback);
 };
 
+Setor.prototype.getPaginacao = function(limit, callback) {
+    this._connection.query(`SELECT s.id, s.nome, s.localizacao, l.nome as nome_localizacao FROM tb_setores as s INNER JOIN tb_locais as l on s.localizacao = l.id ORDER BY nome ASC LIMIT ${limit.inicio}, ${limit.final}`, callback);
+};
+
+Setor.prototype.getCount = function(callback) {
+    this._connection.query("SELECT count(*) as num_rows from tb_setores", callback);
+};
+
 Setor.prototype.salvar = function(Setor, callback) {
     this._connection.query("INSERT INTO tb_setores SET ?", Setor, callback);
 };

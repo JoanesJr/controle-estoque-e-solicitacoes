@@ -8,7 +8,6 @@ module.exports.administrador = (application, req, res) => {
     let modelUsuario = new application.app.models.Usuario(connection);
 
     modelUsuario.getAll(req.session.usuario, (error, result) => {
-        console.log(error)
         res.render('administrador/index', {usuarios : result, usuario : req.session.usuario, validacao : {}, validation : false});
     });
     
@@ -20,7 +19,8 @@ module.exports.addUsuario = (application, req, res) => {
         return;
     }
 
-    res.render('administrador/add_usuario', {validacao : {}});
+    let usuario = req.session.usuario;
+    res.render('administrador/add_usuario', {usuario : usuario, validacao : {}});
 }
 
 module.exports.criarUsuario = (application, req, res) => {
@@ -41,17 +41,17 @@ module.exports.criarUsuario = (application, req, res) => {
     let modelUsuario = new application.app.models.Usuario(connection);
 
     modelUsuario.criarUsuario(form, (error, result) => {
-        res.redirect('/administrador/deposito');
+        res.redirect('/administrador/home');
     });
 }
 
 module.exports.excluir = (application, req, res) => {
-    let id = req.body.id;
+    let id = req.query.id;
 
     let connection = application.config.database();
     let modelUsuario = new application.app.models.Usuario(connection);
 
     modelUsuario.excluir(id, (error, result) => {
-        res.redirect('/administrador/deposito');
+        res.redirect('/administrador/home');
     });
 }

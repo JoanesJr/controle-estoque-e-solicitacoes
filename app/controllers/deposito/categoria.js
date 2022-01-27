@@ -1,7 +1,3 @@
-module.exports.index = (application, req, res) => {
-    res.render('deposito/index');
-}
-
 module.exports.categoria = (application, req, res) => {
     if(!req.session.autenticado) {
         res.redirect('/');
@@ -11,8 +7,29 @@ module.exports.categoria = (application, req, res) => {
     let modelCategoria = new application.app.models.Categoria(connection);
     let usuario = req.session.usuario;
 
-    modelCategoria.getAll((error, result) => {
-        res.render('deposito/categoria/categorias', {categorias : result, usuario : usuario});
+    let limit = {
+        inicio : 0,
+        final : 8
+    };
+
+    modelCategoria.getPaginacao(limit, (error, resultPaginacao) => {
+        if(resultPaginacao === undefined) {
+            resultPaginacao = {};
+        }
+
+        modelCategoria.getCount((error, result) => {
+            let numeroLinhas = result[0].num_rows;
+            let quantidadePaginas;
+
+            if (numeroLinhas % 8 == 0) {
+                quantidadePaginas = numeroLinhas/8;
+            }else {
+                quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
+            }
+
+            res.render('deposito/categoria/categorias', {categorias : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+        }); 
+        
     });
     
 }
@@ -82,5 +99,40 @@ module.exports.update = (application, req, res) => {
     modelCategoria.editar(form, (error, result) => {
         res.redirect('/deposito/categorias');
     });
+}
+
+module.exports.pagina = (application, req, res) => {
+    let paginaDestino = req.query.pagina;
+    let limit = {};
+    if (paginaDestino == 1) {
+        limit = {
+            inicio : 0,
+            final : 8
+        };
+    }else {
+        limit = {
+            inicio : paginaDestino * 8 - 8,
+            final : 8
+        };
     
+    }
+
+    let usuario = req.session.usuario;
+    let connection = application.config.database();
+    let modelCategoria = new application.app.models.Categoria(connection);
+
+    modelCategoria.getPaginacao(limit, (error, resultPaginacao) => {
+        modelCategoria.getCount((error, resultCount) => {
+            let numeroLinhas = resultCount[0].num_rows;
+            let quantidadePaginas;
+
+            if (numeroLinhas % 8 == 0) {
+                quantidadePaginas = numeroLinhas/8;
+            }else {
+                quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
+            }
+
+            res.render('deposito/categoria/categorias', {categorias : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+        });
+    });
 }

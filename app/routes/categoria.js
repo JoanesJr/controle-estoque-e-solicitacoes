@@ -22,4 +22,8 @@ module.exports = application => {
     application.post('/deposito/categorias/editar/editar', (req, res) => {
         application.app.controllers.deposito.categoria.update(application, req, res);
     });
+    
+    application.get('/deposito/categorias/pagina', (req, res) => {
+        application.app.controllers.deposito.categoria.pagina(application, req, res);
+    });
 }

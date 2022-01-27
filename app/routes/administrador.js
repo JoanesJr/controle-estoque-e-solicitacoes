@@ -1,5 +1,5 @@
 module.exports = (application) => {
-     application.get('/administrador/deposito', (req, res) => {
+     application.get('/administrador/home', (req, res) => {
         application.app.controllers.administrador.administrador(application, req, res);
     });
     
@@ -11,7 +11,7 @@ module.exports = (application) => {
         application.app.controllers.administrador.criarUsuario(application, req, res);
     });
 
-     application.post('/administrador/excluir', (req, res) => {
+     application.get('/administrador/excluir_usuario', (req, res) => {
         application.app.controllers.administrador.excluir(application, req, res);
     });
 }

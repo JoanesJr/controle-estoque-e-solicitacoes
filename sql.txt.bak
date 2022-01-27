@@ -1,0 +1,78 @@
+create database deposito;
+
+use deposito;
+
+create table tb_usuarios (
+	id int not null primary key auto_increment,
+	nome varchar(60) not null,
+	usuario varchar(20) not null,
+	senha char(32) not null,
+	cargo varchar(20) not null default 'padrao',
+	data_criacao timestamp default current_timestamp
+);
+
+create table tb_categorias (
+	id int not null primary key auto_increment,
+	nome varchar(20) not null
+);
+
+create table tb_itens (
+	id int not null primary key auto_increment,
+	nome varchar(80) not null,
+	categoria int not null,
+	modelo int not null,
+	quantidade int not null,
+	unidade_medida int not null,
+	data_item timestamp default current_timestamp,
+	
+	foreign key(categoria) references tb_categorias(id)
+);
+
+create table tb_unidade_medida (
+	id int not null primary key auto_increment,
+	nome varchar(20) not null
+);
+
+create table tb_modelos (
+	id int not null primary key auto_increment,
+	nome varchar(20) not null,
+	categoria int,
+	
+	foreign key(categoria) references tb_categorias(id)
+);
+
+create table tb_retiradas(
+	id int not null primary key auto_increment,
+	nome varchar(20) not null,
+	categoria int not null,
+	modelo varchar(20) not null,
+	quantidade int not null, 
+	unidade_medida int not null,
+	usuario varchar(20) not null,
+	data_retirada timestamp default current_timestamp
+);
+
+create table tb_locais(
+	id int not null primary key auto_increment,
+	nome varchar(50) not null
+);
+
+create table tb_setores(
+	id int not null primary key auto_increment,
+	nome varchar(30) not null,
+	localizacao int not null,
+	foreign key(localizacao) references tb_locais(id)
+);
+
+create table tb_computadores(
+	id int not null primary key auto_increment,
+	localizacao int not null,
+	setor int not null,
+	ram int not null,
+	armazenamento int not null,
+	tipo_armazenamento varchar(3) not null,
+	processador varchar(30) not null,
+	modelo_gabinete varchar(50) not null,
+	
+	foreign key(localizacao) references tb_locais(id)
+);

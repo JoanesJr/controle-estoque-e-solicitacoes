@@ -22,4 +22,8 @@ module.exports = application => {
     application.get('/computadores/setores/excluir', (req, res) => {
         application.app.controllers.computadores.setor.excluir(application, req, res);
     })
+
+    application.get('/computadores/setores/pagina', (req, res) => {
+        application.app.controllers.computadores.setor.pagina(application, req, res);
+    });
 };

@@ -10,6 +10,15 @@ Modelo.prototype.getAll = function(callback) {
     this._connection.query("SELECT m.id, m.nome, c.id as categoria_id, c.nome as categoria_nome FROM tb_modelos AS m INNER JOIN tb_categorias as c ON m.categoria = c.id", callback);
 } 
 
+Modelo.prototype.getPaginacao = function(limit, callback) {
+    this._connection.query(`SELECT m.id, m.nome, c.id as categoria_id, c.nome as categoria_nome FROM tb_modelos AS m INNER JOIN tb_categorias as c ON m.categoria = c.id LIMIT ${limit.inicio}, ${limit.final}`, callback);
+};
+
+Modelo.prototype.getCount = function(callback) {
+    this._connection.query("SELECT count(*) as num_rows from tb_modelos", callback);
+};
+
+
 Modelo.prototype.excluir = function(id, callback) {
     this._connection.query(`DELETE FROM tb_modelos WHERE id = ${id.id}`, callback);
 }

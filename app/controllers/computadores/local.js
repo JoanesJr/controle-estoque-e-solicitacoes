@@ -8,8 +8,28 @@ module.exports.index = (application, req, res) => {
     let connection = application.config.database();
     let modelLocal = new application.app.models.Local(connection);
 
-    modelLocal.getAll( (error, result) => {
-        res.render('computadores/local/index', {locais : result, usuario : usuario});
+    let limit = {
+        inicio : 0,
+        final : 8
+    };
+
+    modelLocal.getPaginacao(limit, (error, resultPaginacao) => {
+        if(resultPaginacao === undefined) {
+            resultPaginacao = {};
+        }
+
+        modelLocal.getCount((error, result) => {
+            let numeroLinhas = result[0].num_rows;
+            let quantidadePaginas;
+
+            if (numeroLinhas % 8 == 0) {
+                quantidadePaginas = numeroLinhas/8;
+            }else {
+                quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
+            }
+
+            res.render('computadores/local/index', {locais : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+        }); 
     });
 }
 
@@ -100,5 +120,40 @@ module.exports.excluir = (application, req, res) => {
     modelLocal.excluir(id, (error, result) => {
         console.log(error)
         res.redirect('/computadores/locais');
+    });
+}
+
+module.exports.pagina = (application, req, res) => {
+    let paginaDestino = req.query.pagina;
+    let limit = {};
+    if (paginaDestino == 1) {
+        limit = {
+            inicio : 0,
+            final : 8
+        };
+    }else {
+        limit = {
+            inicio : paginaDestino * 8 - 8,
+            final : 8
+        };
+    
+    }
+    let connection = application.config.database();
+    let modelLocal = new application.app.models.Local(connection);
+    let usuario = req.session.usuario;
+
+    modelLocal.getPaginacao(limit, (error, resultPaginacao) => {
+        modelLocal.getCount((error, resultCount) => {
+            let numeroLinhas = resultCount[0].num_rows;
+            let quantidadePaginas;
+
+            if (numeroLinhas % 8 == 0) {
+                quantidadePaginas = numeroLinhas/8;
+            }else {
+                quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
+            }
+
+            res.render('computadores/local/index', {locais : resultPaginacao, usuario : req.session.usuario, numeroLinhas : numeroLinhas, quantidadePaginas : quantidadePaginas});
+        });
     });
 }

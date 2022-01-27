@@ -31,16 +31,16 @@ module.exports.autenticarAdministrador = (application, req, res) => {
     let modelUsuario = new application.app.models.Usuario(connection);
 
     modelUsuario.autenticarAdministrador(administrador, (error, result) => {
-        console.log(result)
-        if(result == undefined) {
+        if(result == undefined || result == [] || error) {
             req.session.autenticado = false;
         }else {
             req.session.autenticado = true;
             req.session.usuario = result[0].usuario;
         }
         
+        console.log(req.session.autenticado)
         if(req.session.autenticado) {
-            res.redirect('/administrador/deposito');
+            res.redirect('/administrador/home');
         } else {
             let errors = {
                 msg : 'Login ou Senha Incorreto'

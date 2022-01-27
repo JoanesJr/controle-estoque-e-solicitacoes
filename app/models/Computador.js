@@ -6,6 +6,15 @@ Computador.prototype.getAll = function(callback) {
     this._connection.query("SELECT c.id as id, c.localizacao, c.setor, c.ram, c.armazenamento, c.tipo_armazenamento as tipo_armazenamento, c.processador as processador, c.modelo_gabinete as modelo_gabinete, l.nome as nome_localizacao, s.nome as nome_setor FROM tb_computadores as c INNER JOIN tb_locais as l ON c.localizacao = l.id INNER JOIN tb_setores as s ON c.setor = s.id ORDER BY l.nome ASC", callback);
 }
 
+Computador.prototype.getPaginacao = function(limit, callback) {
+    this._connection.query(`SELECT c.id as id, c.localizacao, c.setor, c.ram, c.armazenamento, c.tipo_armazenamento as tipo_armazenamento, c.processador as processador, c.modelo_gabinete as modelo_gabinete, l.nome as nome_localizacao, s.nome as nome_setor FROM tb_computadores as c INNER JOIN tb_locais as l ON c.localizacao = l.id INNER JOIN tb_setores as s ON c.setor = s.id ORDER BY l.nome ASC LIMIT ${limit.inicio}, ${limit.final}`, callback);
+};
+
+Computador.prototype.getCount = function(callback) {
+    this._connection.query("SELECT count(*) as num_rows from tb_computadores", callback);
+};
+
+
 Computador.prototype.excluir = function(form, callback) {
     this._connection.query(`DELETE FROM tb_computadores WHERE id = ${form}`, callback);
 }

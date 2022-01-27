@@ -135,7 +135,6 @@ module.exports.editar = (application, req, res) => {
 module.exports.update = (application, req, res) => {
     let form = req.body;
     form.id = req.query.id;
-    console.log(form);
 
     let connection = application.config.database();
     let modelItem = new application.app.models.Item(connection);
@@ -143,5 +142,38 @@ module.exports.update = (application, req, res) => {
     modelItem.update(form, (error, result) => {
         res.redirect('/deposito');
     });
+}
 
+module.exports.pagina = (application, req, res) => {
+    let paginaDestino = req.query.pagina;
+    let limit = {};
+    if (paginaDestino == 1) {
+        limit = {
+            inicio : 0,
+            final : 4
+        };
+    }else {
+        limit = {
+            inicio : paginaDestino * 4 - 4,
+            final : 4
+        };
+    
+    }
+    let connection = application.config.database();
+    let modelItem = new application.app.models.Item(connection);
+
+    modelItem.getPaginacao(limit, (error, resultItens) => {
+        modelItem.getCount((error, resultCount) => {
+            let numeroLinhas = resultCount[0].num_rows;
+            let quantidadePaginas;
+
+            if (numeroLinhas % 4 == 0) {
+                quantidadePaginas = numeroLinhas/4;
+            }else {
+                quantidadePaginas = Math.floor((numeroLinhas+4) / 4);
+            }
+
+            res.render('deposito/index', {itens : resultItens, usuario : req.session.usuario, numeroLinhas : numeroLinhas, quantidadePaginas : quantidadePaginas});
+        });
+    });
 }
