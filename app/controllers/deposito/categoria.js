@@ -46,20 +46,32 @@ module.exports.adicionar = (application, req, res) => {
 
 module.exports.salvar = (application, req, res) => {
     let categoria = req.body;
-    req.assert('nome', 'O nome da categoria é obrigatório').notEmpty();
-    let errors = req.validationErrors();
-
-    if (errors) {
-        res.render('deposito/categoria/add_categoria', {validacao : errors});
-        return;
-    }
 
     let connection = application.config.database();
     let modelCategoria = new application.app.models.Categoria(connection);
 
-    modelCategoria.salvar(categoria, (error, result) => {
-        res.redirect('/deposito/categorias');
-    }); 
+    modelCategoria.getNomeCategoria(categoria.nome, (error, resultNome) => {
+        req.assert('nome', 'O nome da categoria é obrigatório').notEmpty();
+        let errors = req.validationErrors();
+        if (resultNome[0] != undefined) {
+            errors = [
+                {
+                    msg : 'A Categoria já existe'
+                }
+            ];
+        }
+
+            
+        if (errors) {
+            res.render('deposito/categoria/add_categoria', {validacao : errors, usuario : req.session.usuario});
+            return;
+        }
+
+        modelCategoria.salvar(categoria, (error, result) => {
+            res.redirect('/deposito/categorias');
+        }); 
+    });
+
 }
 
 module.exports.excluir = (application, req, res) => {
@@ -96,8 +108,24 @@ module.exports.update = (application, req, res) => {
     let connection = application.config.database();
     let modelCategoria = new application.app.models.Categoria(connection);
 
-    modelCategoria.editar(form, (error, result) => {
-        res.redirect('/deposito/categorias');
+    modelCategoria.getNomeCategoria(form.nome, (error, resultNome) => {
+        req.assert('nome', 'O nome da categoria é obrigatório').notEmpty();
+        let errors = req.validationErrors();
+        if (resultNome[0] != undefined) {
+            errors = [
+                {
+                    msg : 'A Categoria já existe'
+                }
+            ];
+        }
+         
+        if (errors) {
+            res.render('deposito/categoria/add_categoria', {validacao : errors, usuario : req.session.usuario});
+            return;
+        }
+        modelCategoria.editar(form, (error, result) => {
+            res.redirect('/deposito/categorias');
+        });
     });
 }
 

@@ -18,6 +18,9 @@ Modelo.prototype.getCount = function(callback) {
     this._connection.query("SELECT count(*) as num_rows from tb_modelos", callback);
 };
 
+Modelo.prototype.getNomeModelo = function(modelo, callback) {
+    this._connection.query(`SELECT nome FROM tb_modelos WHERE nome = '${modelo.nome}' AND categoria = ${modelo.categoria} `, callback);
+};
 
 Modelo.prototype.excluir = function(id, callback) {
     this._connection.query(`DELETE FROM tb_modelos WHERE id = ${id.id}`, callback);

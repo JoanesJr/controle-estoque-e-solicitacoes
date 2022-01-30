@@ -44,6 +44,36 @@ module.exports.addUsuario = (application, req, res) => {
     res.render('administrador/add_usuario', {usuario : usuario, validacao : {}});
 }
 
+module.exports.criarUsuario = (application, req, res) => {
+    let form = req.body;
+    
+    let connection = application.config.database();
+    let modelUsuario = new application.app.models.Usuario(connection);
+    modelUsuario.getUsuario(form.usuario, (error, resultUsuario) => {
+        req.assert('nome', 'O nome é obrigatório').notEmpty();
+        req.assert('usuario', 'O usuário é obrigatório').notEmpty();
+        req.assert('senha', 'A senha é obrigatória').notEmpty();
+        let errors = req.validationErrors();
+
+        if (resultUsuario[0] != undefined) {
+            errors = [
+                {
+                    msg : 'Usuario já existe'
+                }
+            ];
+        }
+
+        if(errors) {
+            res.render('administrador/add_usuario', {validacao : errors, usuario : req.session.usuario});
+            return;
+        }
+    
+        modelUsuario.criarUsuario(form, (error, result) => {
+            res.redirect('/administrador/home');
+        });
+    });
+}
+
 module.exports.editar = (application, req, res) => {
     if(!req.session.autenticado) {
         res.redirect('/administrador');
@@ -78,28 +108,6 @@ module.exports.update = (application, req, res) => {
 
 }
 
-module.exports.criarUsuario = (application, req, res) => {
-    let form = req.body;
-    req.assert('nome', 'O nome é obrigatório').notEmpty();
-    req.assert('usuario', 'O usuário é obrigatório').notEmpty();
-    req.assert('senha', 'A senha é obrigatória').notEmpty();
-
-    let errors = req.validationErrors();
-
-    if(errors) {
-        res.render('administrador/add_usuario', {validacao : errors});
-        return;
-    }
-
-
-    let connection = application.config.database();
-    let modelUsuario = new application.app.models.Usuario(connection);
-
-    modelUsuario.criarUsuario(form, (error, result) => {
-        res.redirect('/administrador/home');
-    });
-}
-
 module.exports.excluir = (application, req, res) => {
     let id = req.query.id;
 
@@ -121,7 +129,7 @@ module.exports.pagina = (application, req, res) => {
         };
     }else {
         limit = {
-            inicio : paginaDestino * 8 - 8,
+            inicio : paginaDestino * 7 - 7,
             final : 7
         };
     

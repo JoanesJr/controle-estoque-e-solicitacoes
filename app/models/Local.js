@@ -22,6 +22,10 @@ Local.prototype.getLocal = function(id, callback) {
     this._connection.query(`SELECT * FROM tb_locais WHERE id = '${id.id}'`, callback);
 };
 
+Local.prototype.getNomeLocal = function(nome, callback) {
+    this._connection.query(`SELECT * FROM tb_locais WHERE nome = '${nome}'`, callback);
+};
+
 Local.prototype.editar = function(form, callback) {
     this._connection.query(`UPDATE tb_locais SET nome = '${form.nome}' WHERE id = ${form.id} `, callback);
 };

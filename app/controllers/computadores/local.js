@@ -50,20 +50,28 @@ module.exports.salvar = (application, req, res) => {
     }
 
     let local = req.body;
-    req.assert('nome', 'O nome do local é obrigatório').notEmpty();
-    let errors = req.validationErrors();
-
-    if (errors) {
-        res.render('computadores/local/adicionar', {validacao : errors});
-        return;
-    }
-
     let connection = application.config.database();
     let modelLocal = new application.app.models.Local(connection);
+    req.assert('nome', 'O nome do local é obrigatório').notEmpty();
+    let errors = req.validationErrors();
+    modelLocal.getNomeLocal(local.nome, (error, resultLocal) => {
+        if (resultLocal[0] != undefined) {
+            errors = [
+                {
+                    msg : 'Local já existe'
+                }
+            ];
+        }
 
-    modelLocal.salvar(local, (error, result) => {
-        res.redirect('/computadores/locais');
-    }); 
+        if (errors) {
+            res.render('computadores/local/adicionar', {validacao : errors, usuario : req.session.usuario});
+            return;
+        }
+    
+        modelLocal.salvar(local, (error, result) => {
+            res.redirect('/computadores/locais');
+        }); 
+    });
 }
 
 module.exports.editar = (application, req, res) => {
@@ -88,22 +96,31 @@ module.exports.update = (application, req, res) => {
         return;
     }
 
+    let connection = application.config.database();
+    let modelLocal = new application.app.models.Local(connection);
+
     let form = req.body;
 
     req.assert('nome', 'O nome do local é obrigatório').notEmpty();
     let errors = req.validationErrors();
-
-    if (errors) {
-        res.redirect('/computadores/locais');
-        return;
-    }
-
-    let connection = application.config.database();
-    let modelLocal = new application.app.models.Local(connection);
-
-    modelLocal.editar(form, (error, result) => {
-        res.redirect('/computadores/locais');
+    modelLocal.getNomeLocal(form.nome, (error, resultLocal) => {
+        if (resultLocal[0] != undefined) {
+            errors = [
+                {
+                    msg : 'Local já existe'
+                }
+            ];
+        }
+        if (errors) {
+            res.redirect('/computadores/locais?error=error');
+            return;
+        }
+    
+        modelLocal.editar(form, (error, result) => {
+            res.redirect('/computadores/locais');
+        });
     });
+    
 }
 
 module.exports.excluir = (application, req, res) => {

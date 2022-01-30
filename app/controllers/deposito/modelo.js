@@ -56,20 +56,27 @@ module.exports.salvar = (application, req, res) => {
 
     req.assert('nome', 'O nome do modelo é obrigatório').notEmpty();
     let errors = req.validationErrors();
-
-    let modelCategoria = new application.app.models.Categoria(connection);
-
-    modelCategoria.getAll((error, result) => {
-        if (errors) {
-            res.render('deposito/modelo/add_modelo', {categorias : result, validacao : errors});
-            return;
+    modelModelo.getNomeModelo(modelo, (error, resultModelo) => {
+        if (resultModelo[0] != undefined) {
+            errors = [
+                {
+                    msg : 'Este modelo já foi cadastrado'
+                }
+            ];
         }
+        if (errors) {
+            let modelCategoria = new application.app.models.Categoria(connection);
+            modelCategoria.getAll((error, result) => {
+                res.render('deposito/modelo/add_modelo', {categorias : result, validacao : errors, usuario : req.session.usuario});
+                return;
+            });
+            return
+        }
+        modelModelo.salvar(modelo, (error, result) => {
+          res.redirect('/deposito/modelos');
+      }); 
 
-          modelModelo.salvar(modelo, (error, result) => {
-            res.redirect('/deposito/modelos');
-        }); 
     });
-
 }
 
 module.exports.excluir = (application, req, res) => {
@@ -105,9 +112,29 @@ module.exports.update = (application, req, res) => {
     let connection = application.config.database();
     let modelModelo = new application.app.models.Modelo(connection);
 
-    modelModelo.editar(form, (error, result) => {
-        console.log(error)
-        res.redirect('/deposito/modelos');
+    modelModelo.getNomeModelo(form, (error, resultModelo) => {
+        req.assert('nome', 'O nome do setor é obrigatório').notEmpty();
+        let errors = req.validationErrors();
+        if (resultModelo[0] != undefined) {
+            errors = [
+                {
+                    msg : 'Este modelo já foi cadastrado'
+                }
+            ];
+        }
+
+        if (errors) {
+            let modelCategoria = new application.app.models.Categoria(connection);
+            modelCategoria.getAll((error, resultCategoria) => {
+                res.render('deposito/modelo/add_modelo', {categorias : resultCategoria, validacao : errors, usuario : req.session.usuario});
+                return;
+            }); 
+            return;
+        };
+
+        modelModelo.editar(form, (error, result) => {
+            res.redirect('/deposito/modelos');
+        });
     });
     
 }

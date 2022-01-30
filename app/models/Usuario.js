@@ -9,6 +9,10 @@ Usuario.prototype.criarUsuario = function(usuario, callback) {
     this._connection.query("INSERT INTO tb_usuarios SET ?", usuario, callback);
 }
 
+Usuario.prototype.getUsuario = function(usuario, callback) {
+    this._connection.query(`SELECT usuario FROM tb_usuarios WHERE usuario = '${usuario}'`, callback);
+}
+
 Usuario.prototype.validacao = function(usuario, callback) {
     usuario.senha = md5(usuario.senha);
     this._connection.query(`SELECT id, nome, usuario, senha, cargo FROM tb_usuarios WHERE usuario = '${usuario.usuario}' AND senha = '${usuario.senha}'`, callback);

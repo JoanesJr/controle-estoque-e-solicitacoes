@@ -5,7 +5,7 @@ use deposito;
 create table tb_usuarios (
 	id int not null primary key auto_increment,
 	nome varchar(60) not null,
-	usuario varchar(20) not null,
+	usuario varchar(20) not null unique,
 	senha char(32) not null,
 	cargo varchar(20) not null default 'padrao',
 	data_criacao timestamp default current_timestamp
@@ -13,7 +13,7 @@ create table tb_usuarios (
 
 create table tb_categorias (
 	id int not null primary key auto_increment,
-	nome varchar(20) not null
+	nome varchar(20) not null unique
 );
 
 create table tb_itens (
@@ -30,13 +30,13 @@ create table tb_itens (
 
 create table tb_unidade_medida (
 	id int not null primary key auto_increment,
-	nome varchar(20) not null
+	nome varchar(20) not null unique
 );
 
 create table tb_modelos (
 	id int not null primary key auto_increment,
-	nome varchar(20) not null,
-	categoria int,
+	nome varchar(20) not null unique,
+	categoria int unique,
 	
 	foreign key(categoria) references tb_categorias(id)
 );
@@ -54,12 +54,12 @@ create table tb_retiradas(
 
 create table tb_locais(
 	id int not null primary key auto_increment,
-	nome varchar(50) not null
+	nome varchar(50) not null unique
 );
 
 create table tb_setores(
 	id int not null primary key auto_increment,
-	nome varchar(30) not null,
+	nome varchar(30) not null unique,
 	localizacao int not null,
 	foreign key(localizacao) references tb_locais(id)
 );
@@ -76,3 +76,5 @@ create table tb_computadores(
 	
 	foreign key(localizacao) references tb_locais(id)
 );
+
+INSERT INTO tb_usuarios (nome, usuario, senha, cargo) VALUES ('Administrador', 'Administrador', md5('senha'), 'Administrador');

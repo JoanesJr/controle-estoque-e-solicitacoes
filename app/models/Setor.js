@@ -22,6 +22,10 @@ Setor.prototype.getSetor = function(id, callback) {
     this._connection.query(`SELECT * FROM tb_setores WHERE id = '${id.id}'`, callback);
 };
 
+Setor.prototype.getNomeSetor = function(setor, callback) {
+    this._connection.query(`SELECT nome FROM tb_setores WHERE nome = '${setor.nome}' AND localizacao = ${setor.localizacao} `, callback);
+};
+
 Setor.prototype.editar = function(form, callback) {
     this._connection.query(`UPDATE tb_setores SET nome = '${form.nome}', localizacao = '${form.localizacao}' WHERE id = ${form.id} `, callback);
 };

@@ -22,4 +22,8 @@ module.exports = (application) => {
     application.post('/deposito/unidade_medida/editar/editar', (req, res) => {
         application.app.controllers.deposito.unidade_medida.update(application, req, res);
     });
+
+    application.get('/deposito/unidade_medida/pagina', (req, res) => {
+        application.app.controllers.deposito.unidade_medida.pagina(application, req, res);
+    });
 }

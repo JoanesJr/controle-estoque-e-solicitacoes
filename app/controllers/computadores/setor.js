@@ -55,22 +55,34 @@ module.exports.salvar = (application, req, res) => {
         return;
     }
 
-    let Setor = req.body;
-    req.assert('nome', 'O nome do setor é obrigatório').notEmpty();
-    let errors = req.validationErrors();
-
-    if (errors) {
-        res.render('computadores/setor/adicionar', {validacao : errors});
-        return;
-    }
-
     let connection = application.config.database();
     let modelSetor = new application.app.models.Setor(connection);
+    let setor = req.body;
+    modelSetor.getNomeSetor(setor, (error, resultSetor) => {
+        req.assert('nome', 'O nome do setor é obrigatório').notEmpty();
+        let errors = req.validationErrors();
+        if (resultSetor[0] != undefined) {
+            errors = [
+                {
+                    msg : 'O setor já existe nesta localidade'
+                }
+            ];
+        }
 
-    modelSetor.salvar(Setor, (error, result) => {
-        res.redirect('/computadores/setores');
-    }); 
-}
+        if (errors) {
+            let modelLocal = new application.app.models.Local(connection);
+            modelLocal.getAll((error, resultLocal) => {
+                res.render('computadores/setor/adicionar', {validacao : errors, usuario : req.session.usuario, locais : resultLocal});
+                return;
+            }); 
+            return;
+        };
+    
+        modelSetor.salvar(setor, (error, result) => {
+            res.redirect('/computadores/setores');
+        }); 
+    });
+};
 
 module.exports.editar = (application, req, res) => {
     if(!req.session.autenticado) {
@@ -98,20 +110,34 @@ module.exports.update = (application, req, res) => {
     }
 
     let form = req.body;
-
-    req.assert('nome', 'O nome do setor é obrigatório').notEmpty();
-    let errors = req.validationErrors();
-
-    if (errors) {
-        res.redirect('/computadores/setor');
-        return;
-    }
-
+    
     let connection = application.config.database();
     let modelSetor = new application.app.models.Setor(connection);
 
-    modelSetor.editar(form, (error, result) => {
-        res.redirect('/computadores/setores');
+    modelSetor.getNomeSetor(form, (error, resultSetor) => {
+        req.assert('nome', 'O nome do setor é obrigatório').notEmpty();
+        let errors = req.validationErrors();
+        if (resultSetor[0] != undefined) {
+            errors = [
+                {
+                    msg : 'O setor já existe nesta localidade'
+                }
+            ];
+        }
+
+        if (errors) {
+            let modelLocal = new application.app.models.Local(connection);
+            modelLocal.getAll((error, resultLocal) => {
+                res.render('computadores/setor/adicionar', {validacao : errors, usuario : req.session.usuario, locais : resultLocal});
+                return;
+            }); 
+            return;
+        };
+
+        modelSetor.editar(form, (error, result) => {
+            res.redirect('/computadores/setores');
+        });
+    
     });
 }
 
