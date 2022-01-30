@@ -14,6 +14,6 @@ Vale lembrar que o modelo é diretamente e instriscicamente conectados a categor
 Para cadastrar os computadores, também deve-se cadastrar suas dependências, que são localização e setor. O setor é diretamente ligado a localização. Um local pode ter diversos setores.
 
 Use o seguinte comando para criar o primeiro usuário Administrador:
-"INSERT INTO tb_usuarios (nome, usuario, senha, cargo) VALUES ('nome', 'usuario', 'senha, 'Administrador');
+"INSERT INTO tb_usuarios (nome, usuario, senha, cargo) VALUES ('Administrador', 'Administrador', md5('senha'), 'Administrador');
 
 Após isso, basta acessar o endreço "/administrador" e fazer o login para acessar a área administrativa.

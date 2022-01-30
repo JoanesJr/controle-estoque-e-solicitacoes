@@ -31,14 +31,13 @@ module.exports.autenticarAdministrador = (application, req, res) => {
     let modelUsuario = new application.app.models.Usuario(connection);
 
     modelUsuario.autenticarAdministrador(administrador, (error, result) => {
-        if(result == undefined || result == [] || error) {
-            req.session.autenticado = false;
-        }else {
+        if(result[0] !=undefined) {
             req.session.autenticado = true;
-            req.session.usuario = result[0].usuario;
+            req.session.usuario = result.usuario;
+        }else {
+            req.session.autenticado = false;
         }
         
-        console.log(req.session.autenticado)
         if(req.session.autenticado) {
             res.redirect('/administrador/home');
         } else {
