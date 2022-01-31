@@ -47,7 +47,7 @@ module.exports.salvarItem = (application, req, res) => {
     }
 
     modelItem.salvarItem(item, (error, result) => {
-        res.redirect('/deposito');
+        res.redirect('/deposito?mensagem=0');
     });
 };
 
@@ -72,7 +72,7 @@ module.exports.reduzirItem = (application, req, res) => {
     
             };
             application.app.controllers.retiradas.retirada.addRetirada(application, retirada);
-            res.redirect('/deposito');
+            res.redirect('/deposito?mensagem=5');
         });
     });
 }
@@ -89,7 +89,7 @@ module.exports.aumentarItem = (application, req, res) => {
         controle += parseInt(quantidade);
 
         modelItem.alterarQuantidadeItem(controle, id, (error, result) => {
-            res.redirect('/deposito');
+            res.redirect('/deposito?mensagem=4');
         });
     });
 };
@@ -101,7 +101,7 @@ module.exports.excluir = (application, req, res) => {
     let modelItem = new application.app.models.Item(connection);
     
     modelItem.excluir(id, (error, result) => {
-        res.redirect('/deposito');
+        res.redirect('/deposito?mensagem=3');
     });
 }
 
@@ -140,7 +140,11 @@ module.exports.update = (application, req, res) => {
     let modelItem = new application.app.models.Item(connection);
 
     modelItem.update(form, (error, result) => {
-        res.redirect('/deposito');
+        if(error != undefined) {
+            res.redirect('/deposito?mensagem=6');
+            return;
+        }
+        res.redirect('/deposito?mensagem=2');
     });
 }
 

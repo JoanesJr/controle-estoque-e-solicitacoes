@@ -28,7 +28,7 @@ module.exports.administrador = (application, req, res) => {
                 quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
             }
 
-            res.render('administrador/index', {usuarios : resultPaginacao, usuario : req.session.usuario, validacao : {}, validation : false, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+            res.render('administrador/index', {usuarios : resultPaginacao, usuario : usuario, validacao : {}, validation : false, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
         });     
     });
     

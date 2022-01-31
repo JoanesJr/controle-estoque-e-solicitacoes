@@ -12,6 +12,39 @@ module.exports.modelo = (application, req, res) => {
         final : 8
     };
 
+    let mensagem = {};
+
+    if (req.query != undefined) {
+        let number = parseInt(req.query.mensagem);
+
+        switch(number) {
+            case 0:
+                mensagem = [{
+                    msg : "Adicionado com Sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 1:
+                mensagem = [{
+                    msg : "Item não pode ser excluido, pois esta relacionado a algum cadastro",
+                    alert : 'alert alert-warning'
+                }];
+                break;
+            case 2:
+                mensagem = [{
+                    msg : "Edição realizada com sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 3:
+                mensagem = [{
+                    msg : "Exclusão realizada com sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+        }
+    }
+
     modelModelo.getPaginacao(limit, (error, resultPaginacao) => {
         if(resultPaginacao === undefined) {
             resultPaginacao = {};
@@ -27,7 +60,7 @@ module.exports.modelo = (application, req, res) => {
                 quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
             }
 
-            res.render('deposito/modelo/modelos', {modelos : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+            res.render('deposito/modelo/modelos', {modelos : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas, validacao : mensagem});
         });     
     });
     
@@ -73,7 +106,7 @@ module.exports.salvar = (application, req, res) => {
             return
         }
         modelModelo.salvar(modelo, (error, result) => {
-          res.redirect('/deposito/modelos');
+          res.redirect('/deposito/modelos?mensagem=0');
       }); 
 
     });
@@ -86,7 +119,7 @@ module.exports.excluir = (application, req, res) => {
     let modelModelo = new application.app.models.Modelo(connection);
 
     modelModelo.excluir(id, (error, result) => {
-        res.redirect('/deposito/modelos');
+        res.redirect('/deposito/modelos?mensagem=3');
     });
 }
 
@@ -133,7 +166,7 @@ module.exports.update = (application, req, res) => {
         };
 
         modelModelo.editar(form, (error, result) => {
-            res.redirect('/deposito/modelos');
+            res.redirect('/deposito/modelos?mensagem=2');
         });
     });
     

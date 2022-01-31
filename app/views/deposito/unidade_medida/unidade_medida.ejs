@@ -58,6 +58,20 @@
         <div class="container">
             <div class="row justify-content-center mt-3">
                 <div class="col-12">
+                    <% if(validacao.length > 0) { %>
+                        <div class="col-12 d-flex justify-content-center">
+                            <% for(let i = 0; i < validacao.length; i++) { %>
+                                <div class="<%= validacao[i].alert %> d-flex align-items-center" role="alert">
+                                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                                    <div>
+                                      <%= validacao[i].msg %>
+                                    </div>
+                                </div>
+                            <% } %>
+                            
+                        </div>
+                        
+                        <% } %>
                     <table class="table table-striped border border-primary">
                         <tr class="text-center" id="header">
                             <th>Nome</th>

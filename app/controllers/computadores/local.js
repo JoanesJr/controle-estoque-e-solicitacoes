@@ -13,6 +13,45 @@ module.exports.index = (application, req, res) => {
         final : 8
     };
 
+    let mensagem = {};
+
+    if (req.query != undefined) {
+        let number = parseInt(req.query.mensagem);
+
+        switch(number) {
+            case 0:
+                mensagem = [{
+                    msg : "Adicionado com Sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 1:
+                mensagem = [{
+                    msg : "Item não pode ser excluido, pois esta relacionado a algum cadastro",
+                    alert : 'alert alert-warning'
+                }];
+                break;
+            case 2:
+                mensagem = [{
+                    msg : "Edição realizada com sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 3:
+                mensagem = [{
+                    msg : "Exclusão realizada com sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 4:
+                mensagem = [{
+                    msg : "Local ja Existe",
+                    alert : 'alert alert-warning'
+                }];
+                break;
+        }
+    }
+
     modelLocal.getPaginacao(limit, (error, resultPaginacao) => {
         if(resultPaginacao === undefined) {
             resultPaginacao = {};
@@ -28,7 +67,7 @@ module.exports.index = (application, req, res) => {
                 quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
             }
 
-            res.render('computadores/local/index', {locais : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+            res.render('computadores/local/index', {validacao : mensagem, locais : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
         }); 
     });
 }
@@ -69,7 +108,7 @@ module.exports.salvar = (application, req, res) => {
         }
     
         modelLocal.salvar(local, (error, result) => {
-            res.redirect('/computadores/locais');
+            res.redirect('/computadores/locais?mensagem=0');
         }); 
     });
 }
@@ -112,12 +151,12 @@ module.exports.update = (application, req, res) => {
             ];
         }
         if (errors) {
-            res.redirect('/computadores/locais?error=error');
+            res.redirect('/computadores/locais?mensagem=4');
             return;
         }
     
         modelLocal.editar(form, (error, result) => {
-            res.redirect('/computadores/locais');
+            res.redirect('/computadores/locais?mensagem=2');
         });
     });
     
@@ -136,7 +175,7 @@ module.exports.excluir = (application, req, res) => {
 
     modelLocal.excluir(id, (error, result) => {
         console.log(error)
-        res.redirect('/computadores/locais');
+        res.redirect('/computadores/locais?mensagem=3');
     });
 }
 

@@ -13,6 +13,39 @@ module.exports.index = (application, req, res) => {
         final : 4
     };
 
+    let mensagem = {};
+
+    if (req.query != undefined) {
+        let number = parseInt(req.query.mensagem);
+
+        switch(number) {
+            case 0:
+                mensagem = [{
+                    msg : "Adicionado com Sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 1:
+                mensagem = [{
+                    msg : "Item não pode ser excluido, pois esta relacionado a algum cadastro",
+                    alert : 'alert alert-warning'
+                }];
+                break;
+            case 2:
+                mensagem = [{
+                    msg : "Edição realizada com sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 3:
+                mensagem = [{
+                    msg : "Exclusão realizada com sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+        }
+    }
+
     modelComputador.getPaginacao(limit, (error, resultComputador) => {
         if(resultComputador === undefined) {
             resultComputador = {};
@@ -29,7 +62,7 @@ module.exports.index = (application, req, res) => {
             }
 
 
-            res.render('computadores/index', {computadores : resultComputador, validation : {}, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+            res.render('computadores/index', {computadores : resultComputador, validacao : mensagem, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
         }); 
     }); 
 }
@@ -76,7 +109,7 @@ module.exports.salvar = (application, req, res) => {
     let modelComputador = new application.app.models.Computador(connection);
 
     modelComputador.salvar(form, (error, result) => {
-        res.redirect('/computadores');
+        res.redirect('/computadores?mensagem=0');
     }); 
 };
 
@@ -107,7 +140,7 @@ module.exports.update = (application, req, res) => {
     let modelComputador = new application.app.models.Computador(connection);
 
     modelComputador.update(form, (error, result) => {
-        res.redirect('/computadores');
+        res.redirect('/computadores?mensagem=2');
     });
 }
 
@@ -122,7 +155,7 @@ module.exports.excluir = (application, req, res) => {
     let modelComputador = new application.app.models.Computador(connection);
 
     modelComputador.excluir(form, (error, result) => {
-        res.redirect('/computadores');
+        res.redirect('/computadores?mensagem=3');
     });
 };
 

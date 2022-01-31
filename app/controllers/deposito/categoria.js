@@ -12,6 +12,39 @@ module.exports.categoria = (application, req, res) => {
         final : 8
     };
 
+    let mensagem = {};
+
+    if (req.query != undefined) {
+        let number = parseInt(req.query.mensagem);
+
+        switch(number) {
+            case 0:
+                mensagem = [{
+                    msg : "Adicionado com Sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 1:
+                mensagem = [{
+                    msg : "Item não pode ser excluido, pois esta relacionado a algum cadastro",
+                    alert : 'alert alert-warning'
+                }];
+                break;
+            case 2:
+                mensagem = [{
+                    msg : "Edição realizada com sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 3:
+                mensagem = [{
+                    msg : "Exclusão realizada com sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+        }
+    }
+
     modelCategoria.getPaginacao(limit, (error, resultPaginacao) => {
         if(resultPaginacao === undefined) {
             resultPaginacao = {};
@@ -27,7 +60,7 @@ module.exports.categoria = (application, req, res) => {
                 quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
             }
 
-            res.render('deposito/categoria/categorias', {categorias : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+            res.render('deposito/categoria/categorias', {categorias : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas, validacao : mensagem});
         }); 
         
     });
@@ -60,15 +93,14 @@ module.exports.salvar = (application, req, res) => {
                 }
             ];
         }
-
-            
+        
         if (errors) {
             res.render('deposito/categoria/add_categoria', {validacao : errors, usuario : req.session.usuario});
             return;
         }
 
         modelCategoria.salvar(categoria, (error, result) => {
-            res.redirect('/deposito/categorias');
+            res.redirect('/deposito/categorias?mensagem=0');
         }); 
     });
 
@@ -79,9 +111,21 @@ module.exports.excluir = (application, req, res) => {
 
     let connection = application.config.database();
     let modelCategoria = new application.app.models.Categoria(connection);
+    let modelModelo = new application.app.models.Modelo(connection);
 
-    modelCategoria.excluir(id, (error, result) => {
-        res.redirect('/deposito/categorias');
+    modelModelo.getModeloCategoria(id.id, (error, resultCategoria) => {
+        let errors = false;
+        if(resultCategoria[0] != undefined) {
+            errors = true;
+        }
+
+        if (errors) {
+            res.redirect('/deposito/categorias?mensagem=1');
+            return;
+        }
+        modelCategoria.excluir(id, (error, result) => {
+            res.redirect('/deposito/categorias?mensagem=3');
+        });
     });
 }
 
@@ -124,7 +168,7 @@ module.exports.update = (application, req, res) => {
             return;
         }
         modelCategoria.editar(form, (error, result) => {
-            res.redirect('/deposito/categorias');
+            res.redirect('/deposito/categorias?mensagem=2');
         });
     });
 }

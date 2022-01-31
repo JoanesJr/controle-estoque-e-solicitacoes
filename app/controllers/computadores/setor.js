@@ -13,6 +13,39 @@ module.exports.index = (application, req, res) => {
         final : 8
     };
 
+    let mensagem = {};
+
+    if (req.query != undefined) {
+        let number = parseInt(req.query.mensagem);
+
+        switch(number) {
+            case 0:
+                mensagem = [{
+                    msg : "Adicionado com Sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 1:
+                mensagem = [{
+                    msg : "Item não pode ser excluido, pois esta relacionado a algum cadastro",
+                    alert : 'alert alert-warning'
+                }];
+                break;
+            case 2:
+                mensagem = [{
+                    msg : "Edição realizada com sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 3:
+                mensagem = [{
+                    msg : "Exclusão realizada com sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+        }
+    }
+
     modelSetor.getPaginacao(limit, (error, resultPaginacao) => {
         if(resultPaginacao === undefined) {
             resultPaginacao = {};
@@ -28,7 +61,7 @@ module.exports.index = (application, req, res) => {
                 quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
             }
 
-            res.render('computadores/setor/index', {setores : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+            res.render('computadores/setor/index', {validacao : mensagem, setores : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
         }); 
         
     });
@@ -79,7 +112,7 @@ module.exports.salvar = (application, req, res) => {
         };
     
         modelSetor.salvar(setor, (error, result) => {
-            res.redirect('/computadores/setores');
+            res.redirect('/computadores/setores?mensagem=0');
         }); 
     });
 };
@@ -135,7 +168,7 @@ module.exports.update = (application, req, res) => {
         };
 
         modelSetor.editar(form, (error, result) => {
-            res.redirect('/computadores/setores');
+            res.redirect('/computadores/setores?mensagem=2');
         });
     
     });
@@ -153,7 +186,7 @@ module.exports.excluir = (application, req, res) => {
     let modelSetor = new application.app.models.Setor(connection);
 
     modelSetor.excluir(id, (error, result) => {
-        res.redirect('/computadores/setores');
+        res.redirect('/computadores/setores?mensagem=3');
     });
 }
 

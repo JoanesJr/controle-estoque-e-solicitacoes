@@ -12,6 +12,39 @@ module.exports.index = (application, req, res) => {
         final : 6
     };
 
+    let mensagem = {};
+
+    if (req.query != undefined) {
+        let number = parseInt(req.query.mensagem);
+
+        switch(number) {
+            case 0:
+                mensagem = [{
+                    msg : "Adicionado com Sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 1:
+                mensagem = [{
+                    msg : "Item não pode ser excluido, pois esta relacionado a algum cadastro",
+                    alert : 'alert alert-warning'
+                }];
+                break;
+            case 2:
+                mensagem = [{
+                    msg : "Edição realizada com sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+            case 3:
+                mensagem = [{
+                    msg : "Exclusão realizada com sucesso",
+                    alert : 'alert alert-success'
+                }];
+                break;
+        }
+    }
+
     unidadeMedidaModel.getPaginacao(limit, (error, resultPaginacao) => {
         if(resultPaginacao === undefined) {
             resultPaginacao = {};
@@ -27,7 +60,7 @@ module.exports.index = (application, req, res) => {
                 quantidadePaginas = Math.floor((numeroLinhas+6) / 6);
             }
 
-            res.render('deposito/unidade_medida/unidade_medida', {unidadeMedidas : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+            res.render('deposito/unidade_medida/unidade_medida', {unidadeMedidas : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas, validacao : mensagem});
         }); 
     });
 }
@@ -65,7 +98,7 @@ module.exports.salvarUnidadeMedida = (application, req, res) => {
         }
 
         unidadeMedidaModel.salvar(unidadeMedida, (error, result) => {
-            res.redirect('/deposito/unidade_medida');
+            res.redirect('/deposito/unidade_medida?mensagem=0');
         });
     });
 }
@@ -76,7 +109,7 @@ module.exports.excluir = (application, req, res) => {
     let unidadeMedidaModel = new application.app.models.UnidadeMedida(connection);
 
     unidadeMedidaModel.excluir(id, (error, result) => {
-        res.redirect('/deposito/unidade_medida');
+        res.redirect('/deposito/unidade_medida?mensagem=3');
     });
 }
 
@@ -113,7 +146,7 @@ module.exports.update = (application, req, res) => {
             return;
         }
         modelUnidadeMedida.editar(form, (error, result) => {
-            res.redirect('/deposito/unidade_medida');
+            res.redirect('/deposito/unidade_medida?mensagem=2');
         }); 
     });
 }
