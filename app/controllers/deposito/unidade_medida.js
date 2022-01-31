@@ -182,7 +182,7 @@ module.exports.pagina = (application, req, res) => {
                 quantidadePaginas = Math.floor((numeroLinhas+6) / 6);
             }
 
-            res.render('deposito/unidade_medida/unidade_medida', {unidadeMedidas : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+            res.render('deposito/unidade_medida/unidade_medida', {validacao : {}, unidadeMedidas : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
         });
     });
 }

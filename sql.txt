@@ -36,7 +36,7 @@ create table tb_unidade_medida (
 create table tb_modelos (
 	id int not null primary key auto_increment,
 	nome varchar(20) not null unique,
-	categoria int unique,
+	categoria int,
 	
 	foreign key(categoria) references tb_categorias(id)
 );

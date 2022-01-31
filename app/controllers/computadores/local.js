@@ -174,7 +174,6 @@ module.exports.excluir = (application, req, res) => {
     let modelLocal = new application.app.models.Local(connection);
 
     modelLocal.excluir(id, (error, result) => {
-        console.log(error)
         res.redirect('/computadores/locais?mensagem=3');
     });
 }
@@ -209,7 +208,7 @@ module.exports.pagina = (application, req, res) => {
                 quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
             }
 
-            res.render('computadores/local/index', {locais : resultPaginacao, usuario : req.session.usuario, numeroLinhas : numeroLinhas, quantidadePaginas : quantidadePaginas});
+            res.render('computadores/local/index', {validacao : {}, locais : resultPaginacao, usuario : req.session.usuario, numeroLinhas : numeroLinhas, quantidadePaginas : quantidadePaginas});
         });
     });
 }

@@ -132,7 +132,6 @@ module.exports.editar = (application, req, res) => {
 
     modelModelo.getmodelo(id, (error, resultModelo) => {
         modelCategoria.getAll((error, resultCategoria) => {
-            console.log(resultCategoria)
             res.render('deposito/modelo/edit_modelo', {usuario : usuario, modelo : resultModelo, categorias : resultCategoria});
         });
     });
@@ -214,7 +213,7 @@ module.exports.pagina = (application, req, res) => {
                 quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
             }
 
-            res.render('deposito/modelo/modelos', {modelos : result, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
+            res.render('deposito/modelo/modelos', {modelos : result, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas, validacao : {}});
         });
     });
 }

@@ -177,7 +177,7 @@ module.exports.pagina = (application, req, res) => {
                 quantidadePaginas = Math.floor((numeroLinhas+4) / 4);
             }
 
-            res.render('deposito/index', {itens : resultItens, usuario : req.session.usuario, numeroLinhas : numeroLinhas, quantidadePaginas : quantidadePaginas});
+            res.render('deposito/index', {validacao : {}, itens : resultItens, usuario : req.session.usuario, numeroLinhas : numeroLinhas, quantidadePaginas : quantidadePaginas});
         });
     });
 }

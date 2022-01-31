@@ -198,7 +198,7 @@ module.exports.pagina = (application, req, res) => {
                 quantidadePaginas = Math.floor((numeroLinhas+4) / 4);
             }
 
-            res.render('computadores/index', {computadores : resultComputadores, usuario : req.session.usuario, numeroLinhas : numeroLinhas, quantidadePaginas : quantidadePaginas});
+            res.render('computadores/index', {validacao : {}, computadores : resultComputadores, usuario : req.session.usuario, numeroLinhas : numeroLinhas, quantidadePaginas : quantidadePaginas});
         });
     });
 }
