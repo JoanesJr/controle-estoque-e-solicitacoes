@@ -59,9 +59,27 @@
         <div class="container">
             <div class="row justify-content-center align-items-center vh-100">
                 <div class="col-auto">
-    
+                    <% if(validacao.length > 0) { %>
+                        <div class="col-auto">
+                            <% for(let i = 0; i < validacao.length; i++) { %>
+                                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                                    <div>
+                                      <%= validacao[i].msg %>
+                                    </div>
+                                </div>
+                            <% } %>
+                            
+                        </div>
+                        
+                    <% } %>
                     <h3 class= "mb-3">EDITAR COMPUTADOR</h3>
-                    <form action="/computadores/update" method="post">
+                    <form action="/computadores/update?nome_old=<%= computador[0].nome %>" method="post">
+                        
+                        <div class="form-group">
+                            <label for="modelo_gabinete">Nome</label>
+                            <input type="text" value="<%= computador[0].nome %>" name="nome" id="nome" class="form-control">
+                        </div>
                         <div class="form-group">
                             <label for="modelo_gabinete">Modelo Gabinete</label>
                             <input type="text" value="<%= computador[0].modelo_gabinete %>" name="modelo_gabinete" id="modelo_gabinete" class="form-control">
@@ -103,7 +121,7 @@
                         <div class="row">
                             <div class="form-group d-flex justify-content-center align-items-center mt-4">
                                 <input type="submit" value="Editar" class="btn btn-primary">
-                                <a href="/computadores" class="btn btn-outline-danger">Voltar</a>
+                                <a href="/computadores" class="btn btn-outline-danger m-2">Voltar</a>
                             </div>
                         </div>
                         

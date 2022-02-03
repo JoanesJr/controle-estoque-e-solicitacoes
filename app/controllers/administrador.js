@@ -102,7 +102,6 @@ module.exports.update = (application, req, res) => {
     let modelUsuario = new application.app.models.Usuario(connection);
 
     modelUsuario.editar(usuario, (error, result) => {
-        console.log(usuario);
         res.redirect('/administrador/home');
     });
 

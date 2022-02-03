@@ -89,6 +89,8 @@ module.exports.salvar = (application, req, res) => {
     }
 
     let form = req.body;
+    let usuario = req.session.usuario;
+    req.assert('nome', "o Nome é obrigatório").notEmpty();
     req.assert('modelo_gabinete', "Modelo do Gabinete obrigatório").notEmpty();
     req.assert('ram', "Memória RAM é obrigatório").notEmpty();
     req.assert('setor', "O setor é obrigatório").notEmpty();
@@ -97,20 +99,28 @@ module.exports.salvar = (application, req, res) => {
 
     let errors = req.validationErrors();
     let connection = application.config.database();
-    if(errors) {
-        let modelLocal = new application.app.models.Local(connection);
-        modelLocal.getAll( (error, result) => {
-            res.render('computadores/adicionar', {validacao : errors, dados : form, localizacao : result});
-        });
-        
-        return;
-    }
-
     let modelComputador = new application.app.models.Computador(connection);
+    modelComputador.getComputadorNome(form.nome, (error, resultNome) => {
+        if (resultNome[0] != undefined) {
+            errors = [{
+                msg :  "Já existe computador cadastrado com esse nome"
+            }];
+        }
 
-    modelComputador.salvar(form, (error, result) => {
-        res.redirect('/computadores?mensagem=0');
-    }); 
+        if(errors.length > 0) {
+            let modelLocal = new application.app.models.Local(connection);
+            modelLocal.getAll( (error, result) => {
+                res.render('computadores/adicionar', {usuario: usuario, validacao : errors, dados : form, localizacao : result});
+                return;
+            });   
+            return;
+        }
+    
+        modelComputador.salvar(form, (error, result) => {
+            res.redirect('/computadores?mensagem=0');
+        }); 
+    });
+
 };
 
 module.exports.editar = (application, req, res) => {
@@ -128,20 +138,64 @@ module.exports.editar = (application, req, res) => {
 
     modelComputador.getComputador(id, (error, resultComputador) => {
         modelLocalizacao.getAll((error, resultLocal) => {
-            res.render('computadores/editar', {usuario : usuario, computador : resultComputador, localizacao : resultLocal});
+            res.render('computadores/editar', {validacao : {}, usuario : usuario, computador : resultComputador, localizacao : resultLocal});
         });
     });
 }
 
 module.exports.update = (application, req, res) => {
-    let form = req. body;
+    let form = req.body;
+    req.assert('nome', "o Nome é obrigatório").notEmpty();
+    req.assert('modelo_gabinete', "Modelo do Gabinete obrigatório").notEmpty();
+    req.assert('ram', "Memória RAM é obrigatório").notEmpty();
+    req.assert('setor', "O setor é obrigatório").notEmpty();
+    req.assert('localizacao', "A Localização obrigatória").notEmpty();
+    req.assert('armazenamento', "O Armazenamento é obrigatório").notEmpty();
+    let errors = req.validationErrors();
+    let usuario = req.session.usuario;
 
     let connection = application.config.database();
     let modelComputador = new application.app.models.Computador(connection);
+    let nome = {};
 
-    modelComputador.update(form, (error, result) => {
-        res.redirect('/computadores?mensagem=2');
+    if (req.query.nome_old == form.nome) {
+        nome = ''
+    } else {
+        nome = form.nome
+    }
+
+    let formErro = [
+        {
+            id : form.id,
+            nome : form.nome,
+            modelo_gabinete : form.modelo_gabinete,
+            ram : form.ram,
+            processador : form.processador,
+            armazenamento : form.armazenamento
+        }
+    ]
+
+    modelComputador.getComputadorNomeEditar(nome, (error, resultNome) => {
+        if (resultNome[0] != undefined) {
+            errors = [{
+                msg : "Já existe computador cadastrado com este nome"
+            }];
+        }
+
+        if(errors) {
+            let modelLocalizacao = new application.app.models.Local(connection);
+            modelLocalizacao.getAll( (error, resultLocal) => {
+                res.render('computadores/editar', {validacao : errors, usuario : usuario, computador : formErro, localizacao : resultLocal});
+                return;
+            });
+            return;
+        }
+        modelComputador.update(form, (error, result) => {
+            res.redirect('/computadores?mensagem=2');
+        });
     });
+
+    
 }
 
 module.exports.excluir = (application, req, res) => {

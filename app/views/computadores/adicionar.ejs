@@ -75,6 +75,10 @@
                     <h3 class= "mb-3">ADICIONAR COMPUTADOR</h3>
                     <form action="/computadores/salvar" method="post">
                         <div class="form-group">
+                            <label for="modelo_gabinete">Nome</label>
+                            <input type="text" value="<%= dados.nome %>" name="nome" id="nome" class="form-control">
+                        </div>
+                        <div class="form-group">
                             <label for="modelo_gabinete">Modelo Gabinete</label>
                             <input type="text" value="<%= dados.modelo_gabinete %>" name="modelo_gabinete" id="modelo_gabinete" class="form-control">
                         </div>
@@ -113,7 +117,7 @@
                         <div class="row">
                             <div class="form-group d-flex justify-content-center align-items-center mt-4">
                                 <input type="submit" value="Criar" class="btn btn-primary">
-                                <a href="/computadores" class="btn btn-outline-danger">Voltar</a>
+                                <a href="/computadores" class="btn btn-outline-danger m-2">Voltar</a>
                             </div>
                         </div>  
                     </form>

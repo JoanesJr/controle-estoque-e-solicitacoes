@@ -68,6 +68,7 @@ create table tb_computadores(
 	id int not null primary key auto_increment,
 	localizacao int not null,
 	setor int not null,
+	nome varchar(10) not null unique,
 	ram int not null,
 	armazenamento int not null,
 	tipo_armazenamento varchar(3) not null,
@@ -77,4 +78,4 @@ create table tb_computadores(
 	foreign key(localizacao) references tb_locais(id)
 );
 
-INSERT INTO tb_usuarios (nome, usuario, senha, cargo) VALUES ('Administrador', 'Administrador', md5('senha'), 'Administrador');
+INSERT INTO tb_usuarios (nome, usuario, senha, cargo) VALUES ('Administrador', 'Administrador', md5('admDeposito'), 'Administrador');

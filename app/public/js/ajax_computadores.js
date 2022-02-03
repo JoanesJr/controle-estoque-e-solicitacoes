@@ -9,7 +9,6 @@ $(document).ready( () => {
            url : '/computadores/setores/get',
            data : {localizacao : localizacao}
        }).done( dados => {
-           console.log(dados)
            for(let i = 0; i < dados.length; i++) {
             setor.append(`<option value=${dados[i].id}>${dados[i].nome}</option>`);
 
