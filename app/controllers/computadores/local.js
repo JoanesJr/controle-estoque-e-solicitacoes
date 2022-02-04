@@ -91,6 +91,7 @@ module.exports.salvar = (application, req, res) => {
     let local = req.body;
     let connection = application.config.database();
     let modelLocal = new application.app.models.Local(connection);
+    local.nome = local.nome.toUpperCase();
     req.assert('nome', 'O nome do local é obrigatório').notEmpty();
     let errors = req.validationErrors();
     modelLocal.getNomeLocal(local.nome, (error, resultLocal) => {
@@ -139,7 +140,7 @@ module.exports.update = (application, req, res) => {
     let modelLocal = new application.app.models.Local(connection);
 
     let form = req.body;
-
+    form.nome = form.nome.toUpperCase();
     req.assert('nome', 'O nome do local é obrigatório').notEmpty();
     let errors = req.validationErrors();
     modelLocal.getNomeLocal(form.nome, (error, resultLocal) => {

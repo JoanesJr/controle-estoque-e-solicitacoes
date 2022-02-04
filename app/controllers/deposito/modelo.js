@@ -88,6 +88,7 @@ module.exports.salvar = (application, req, res) => {
     let modelModelo = new application.app.models.Modelo(connection);
 
     req.assert('nome', 'O nome do modelo é obrigatório').notEmpty();
+    modelo.nome = modelo.nome.toUpperCase();
     let errors = req.validationErrors();
     modelModelo.getNomeModelo(modelo, (error, resultModelo) => {
         if (resultModelo[0] != undefined) {
@@ -143,6 +144,7 @@ module.exports.update = (application, req, res) => {
 
     let connection = application.config.database();
     let modelModelo = new application.app.models.Modelo(connection);
+    form.nome = form.nome.toUpperCase();
 
     modelModelo.getNomeModelo(form, (error, resultModelo) => {
         req.assert('nome', 'O nome do setor é obrigatório').notEmpty();

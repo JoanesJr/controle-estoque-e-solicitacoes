@@ -14,10 +14,14 @@ module.exports.autenticar = (application, req, res) => {
         
         if(req.session.autenticado) {
             res.redirect('/deposito');
+            return;
+            
         } else {
             let errors = {
                 msg : 'Usuario ou Senha incorretos'
             };
+
+           
 
             res.render('login/index', {validacao : errors, validation : true});
         }

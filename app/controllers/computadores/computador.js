@@ -90,6 +90,9 @@ module.exports.salvar = (application, req, res) => {
 
     let form = req.body;
     let usuario = req.session.usuario;
+    form.modelo_gabinete = form.modelo_gabinete.toUpperCase();
+    form.nome = form.nome.toUpperCase();
+    form.processador = form.processador.toUpperCase();
     req.assert('nome', "o Nome é obrigatório").notEmpty();
     req.assert('modelo_gabinete', "Modelo do Gabinete obrigatório").notEmpty();
     req.assert('ram', "Memória RAM é obrigatório").notEmpty();
@@ -145,6 +148,9 @@ module.exports.editar = (application, req, res) => {
 
 module.exports.update = (application, req, res) => {
     let form = req.body;
+    form.modelo_gabinete = form.modelo_gabinete.toUpperCase();
+    form.nome = form.nome.toUpperCase();
+    form.processador = form.processador.toUpperCase();
     req.assert('nome', "o Nome é obrigatório").notEmpty();
     req.assert('modelo_gabinete', "Modelo do Gabinete obrigatório").notEmpty();
     req.assert('ram', "Memória RAM é obrigatório").notEmpty();

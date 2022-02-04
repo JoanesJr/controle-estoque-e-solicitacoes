@@ -3,21 +3,42 @@ create database deposito;
 use deposito;
 
 create table tb_usuarios (
-	id int not null primary key auto_increment,
+	id int not null auto_increment,
 	nome varchar(60) not null,
 	usuario varchar(20) not null unique,
 	senha char(32) not null,
 	cargo varchar(20) not null default 'padrao',
-	data_criacao timestamp default current_timestamp
+	data_criacao timestamp default current_timestamp,
+
+	PRIMARY KEY(id)
 );
 
 create table tb_categorias (
-	id int not null primary key auto_increment,
-	nome varchar(20) not null unique
+	id int not null auto_increment,
+	nome varchar(20) not null unique,
+
+	PRIMARY KEY(id)
+);
+
+
+create table tb_unidade_medida (
+	id int not null auto_increment,
+	nome varchar(20) not null unique,
+
+	primary key(id)
+);
+
+create table tb_modelos (
+	id int not null auto_increment,
+	nome varchar(20) not null unique,
+	categoria int,
+	
+	primary key(id),
+	constraint fk_idCategoria_categoriaModelo foreign key(categoria) references tb_categorias(id)
 );
 
 create table tb_itens (
-	id int not null primary key auto_increment,
+	id int not null auto_increment,
 	nome varchar(80) not null,
 	categoria int not null,
 	modelo int not null,
@@ -25,47 +46,45 @@ create table tb_itens (
 	unidade_medida int not null,
 	data_item timestamp default current_timestamp,
 	
-	foreign key(categoria) references tb_categorias(id)
-);
-
-create table tb_unidade_medida (
-	id int not null primary key auto_increment,
-	nome varchar(20) not null unique
-);
-
-create table tb_modelos (
-	id int not null primary key auto_increment,
-	nome varchar(20) not null unique,
-	categoria int,
-	
-	foreign key(categoria) references tb_categorias(id)
+	primary key(id),
+	CONSTRAINT fk_idCategoria_categoriaItem foreign key(categoria) references tb_categorias(id),
+	CONSTRAINT fk_idModelo_modeloItem foreign key(modelo) references tb_modelos(id),
+	CONSTRAINT fk_idUnidadeMedida_unidadeMedidaItem foreign key(unidade_medida) references tb_unidade_medida(id)
 );
 
 create table tb_retiradas(
-	id int not null primary key auto_increment,
+	id int not null auto_increment,
 	nome varchar(20) not null,
 	categoria int not null,
 	modelo varchar(20) not null,
 	quantidade int not null, 
 	unidade_medida int not null,
 	usuario varchar(20) not null,
-	data_retirada timestamp default current_timestamp
+	data_retirada timestamp default current_timestamp,
+
+	primary key(id),
+	constraint fk_idCategoria_categoriaRetirada foreign key(categoria) references tb_categorias(id),
+	constraint fk_idUnidadeMedida_unidadeMedida foreign key(unidade_medida) references tb_unidade_medida(id)
 );
 
 create table tb_locais(
-	id int not null primary key auto_increment,
-	nome varchar(50) not null unique
+	id int not null auto_increment,
+	nome varchar(50) not null unique,
+
+	primary key(id)
 );
 
 create table tb_setores(
-	id int not null primary key auto_increment,
+	id int not null auto_increment,
 	nome varchar(30) not null unique,
 	localizacao int not null,
-	foreign key(localizacao) references tb_locais(id)
+
+	primary key(id),
+	constraint fk_idLocal_localizacaoSetor foreign key(localizacao) references tb_locais(id)
 );
 
 create table tb_computadores(
-	id int not null primary key auto_increment,
+	id int not null auto_increment,
 	localizacao int not null,
 	setor int not null,
 	nome varchar(10) not null unique,
@@ -74,8 +93,11 @@ create table tb_computadores(
 	tipo_armazenamento varchar(3) not null,
 	processador varchar(30) not null,
 	modelo_gabinete varchar(50) not null,
-	
-	foreign key(localizacao) references tb_locais(id)
+
+	primary key(id),
+	constraint fk_idLocalizacao_localizacaoComputador foreign key(localizacao) references tb_locais(id),
+	constraint fk_idSetor_setorComputador foreign key(setor) references tb_setores(id)
 );
 
-INSERT INTO tb_usuarios (nome, usuario, senha, cargo) VALUES ('Administrador', 'Administrador', md5('admDeposito'), 'Administrador');
+INSERT INTO tb_usuarios (nome, usuario, senha, cargo) VALUES ('Administrador', 'Administrador', md5('senhaAdm'), 'Administrador');
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'senha_bd';

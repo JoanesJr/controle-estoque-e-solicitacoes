@@ -4,7 +4,7 @@ let connection = function() {
     return mysql.createConnection({
         host : 'localhost',
         user : 'root',
-        password : 'def75315901',
+        password : 'aloisk#Sepaco#TIPaineiras',
         database : 'deposito'
     });
 }; 

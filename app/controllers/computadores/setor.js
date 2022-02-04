@@ -92,6 +92,7 @@ module.exports.salvar = (application, req, res) => {
     let modelSetor = new application.app.models.Setor(connection);
     let setor = req.body;
     modelSetor.getNomeSetor(setor, (error, resultSetor) => {
+        setor.nome = setor.nome.toUpperCase();
         req.assert('nome', 'O nome do setor é obrigatório').notEmpty();
         let errors = req.validationErrors();
         if (resultSetor[0] != undefined) {
@@ -148,6 +149,7 @@ module.exports.update = (application, req, res) => {
     let modelSetor = new application.app.models.Setor(connection);
 
     modelSetor.getNomeSetor(form, (error, resultSetor) => {
+        form.nome = form.nome.toUpperCase();
         req.assert('nome', 'O nome do setor é obrigatório').notEmpty();
         let errors = req.validationErrors();
         if (resultSetor[0] != undefined) {

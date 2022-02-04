@@ -85,6 +85,7 @@ module.exports.salvar = (application, req, res) => {
 
     modelCategoria.getNomeCategoria(categoria.nome, (error, resultNome) => {
         req.assert('nome', 'O nome da categoria é obrigatório').notEmpty();
+        categoria.nome = categoria.nome.toUpperCase();
         let errors = req.validationErrors();
         if (resultNome[0] != undefined) {
             errors = [
@@ -154,6 +155,7 @@ module.exports.update = (application, req, res) => {
 
     modelCategoria.getNomeCategoria(form.nome, (error, resultNome) => {
         req.assert('nome', 'O nome da categoria é obrigatório').notEmpty();
+        form.nome = form.nome.toUpperCase();
         let errors = req.validationErrors();
         if (resultNome[0] != undefined) {
             errors = [

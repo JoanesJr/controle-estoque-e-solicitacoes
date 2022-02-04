@@ -82,6 +82,7 @@ module.exports.salvarUnidadeMedida = (application, req, res) => {
 
     unidadeMedidaModel.getNomeUnidadeMedida(unidadeMedida.nome, (error, resultNome) => {
         req.assert('nome', 'O nome da unidade de medida é obrigatório').notEmpty();
+        unidadeMedida.nome = unidadeMedida.nome.toUpperCase();
         let errors = req.validationErrors();
 
         if (resultNome[0] != undefined) {
@@ -129,6 +130,7 @@ module.exports.update = (application, req, res) => {
 
     let connection = application.config.database();
     let modelUnidadeMedida = new application.app.models.UnidadeMedida(connection);
+    form.nome = form.nome.toUpperCase();
 
     modelUnidadeMedida.getNomeUnidadeMedida(form.nome, (error, resultNome) => {
         req.assert('nome', 'O nome da unidade de medida é obrigatório').notEmpty();
@@ -136,7 +138,7 @@ module.exports.update = (application, req, res) => {
         if (resultNome[0] != undefined) {
             errors = [
                 {
-                    msg : 'A Categoria já existe'
+                    msg : 'A Unidade de Medida já existe'
                 }
             ];
         }

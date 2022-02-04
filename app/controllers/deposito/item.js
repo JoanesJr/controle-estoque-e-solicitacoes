@@ -26,7 +26,7 @@ module.exports.salvarItem = (application, req, res) => {
     let modelUnidadeMedidaModel = new application.app.models.UnidadeMedida(connection);
     let modelModelo = new application.app.models.Modelo(connection);
     let modelItem = new application.app.models.Item(connection);
-
+    item.nome = item.nome.toUpperCase();
     req.assert('nome', "O nome é obrigatório").notEmpty();
     req.assert('quantidade', "A quantidade é obrigatória").notEmpty();
     req.assert('categoria', "a Categoria é obrigatório").notEmpty();
@@ -125,8 +125,7 @@ module.exports.editar = (application, req, res) => {
             modelModelo.getAll((error, resultModelo) => {
                 modelItem.getItem(id, (error, resultItem) => {
                     res.render('deposito/editar', {usuario : usuario, categorias : resultCategoria, unidadeMedida : resultUnidadeMedida, modelos : resultModelo, validation : {}, item : resultItem});
-                });
-                
+                });       
             });
         });  
     });
@@ -138,6 +137,7 @@ module.exports.update = (application, req, res) => {
 
     let connection = application.config.database();
     let modelItem = new application.app.models.Item(connection);
+    form.nome = form.nome.toUpperCase();
 
     modelItem.update(form, (error, result) => {
         if(error != undefined) {
