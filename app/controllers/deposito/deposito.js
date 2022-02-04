@@ -63,8 +63,6 @@ module.exports.index = (application, req, res) => {
     }
 
     modelItem.getPaginacao(limit, (error, resultItens) => {
-        console.log("error: " + error)
-        console.log("result: " + resultItens)
         if(resultItens === undefined) {
             resultItens = {};
         }

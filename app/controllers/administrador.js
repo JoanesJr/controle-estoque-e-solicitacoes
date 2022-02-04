@@ -50,6 +50,8 @@ module.exports.criarUsuario = (application, req, res) => {
     let connection = application.config.database();
     let modelUsuario = new application.app.models.Usuario(connection);
     modelUsuario.getUsuario(form.usuario, (error, resultUsuario) => {
+        form.nome = form.nome.toUpperCase();
+        form.usuario = form.usuario.toUpperCase();
         req.assert('nome', 'O nome é obrigatório').notEmpty();
         req.assert('usuario', 'O usuário é obrigatório').notEmpty();
         req.assert('senha', 'A senha é obrigatória').notEmpty();

@@ -3,6 +3,7 @@ module.exports.autenticar = (application, req, res) => {
 
     let connection = application.config.database();
     let modelUsuario = new application.app.models.Usuario(connection);
+    usuario.usuario = usuario.usuario.toUpperCase();
 
     modelUsuario.validacao(usuario, (error, result) => {
         if(result[0] == undefined) {
