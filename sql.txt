@@ -100,4 +100,4 @@ create table tb_computadores(
 );
 
 INSERT INTO tb_usuarios (nome, usuario, senha, cargo) VALUES ('Administrador', 'Administrador', md5('senhaAdm'), 'Administrador');
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'senha_bd';
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'senhaDb';
