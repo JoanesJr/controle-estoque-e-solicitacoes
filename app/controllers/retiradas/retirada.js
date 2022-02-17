@@ -9,7 +9,7 @@ module.exports.retirada = (application, req, res) => {
 
     let limit = {
         inicio : 0,
-        final : 10
+        final : 8
     };
 
     modelRetirada.getPaginacao(limit, (error, resultPaginacao) => {
@@ -20,10 +20,10 @@ module.exports.retirada = (application, req, res) => {
             let numeroLinhas = result[0].num_rows;
             let quantidadePaginas;
 
-            if (numeroLinhas % 10 == 0) {
-                quantidadePaginas = numeroLinhas/10;
+            if (numeroLinhas % 8 == 0) {
+                quantidadePaginas = numeroLinhas/8;
             }else {
-                quantidadePaginas = Math.floor((numeroLinhas+10) / 10);
+                quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
             }
             res.render('retirada/index', {itens : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});
         });
@@ -43,12 +43,12 @@ module.exports.pagina = (application, req, res) => {
     if (paginaDestino == 1) {
         limit = {
             inicio : 0,
-            final : 10
+            final : 8
         };
     }else {
         limit = {
-            inicio : paginaDestino * 10 - 10,
-            final : 10
+            inicio : paginaDestino * 8 - 8,
+            final : 8
         };
     
     }
@@ -62,10 +62,10 @@ module.exports.pagina = (application, req, res) => {
             let numeroLinhas = resultCount[0].num_rows;
             let quantidadePaginas;
 
-            if (numeroLinhas % 10 == 0) {
-                quantidadePaginas = numeroLinhas/10;
+            if (numeroLinhas % 8 == 0) {
+                quantidadePaginas = numeroLinhas/8;
             }else {
-                quantidadePaginas = Math.floor((numeroLinhas+10) / 10);
+                quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
             }
 
             res.render('retirada/index', {itens : resultRetiradas, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas});

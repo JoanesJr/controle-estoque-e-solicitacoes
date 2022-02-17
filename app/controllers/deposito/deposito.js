@@ -8,7 +8,7 @@ module.exports.index = (application, req, res) => {
 
     let limit = {
         inicio : 0,
-        final : 4
+        final : 3
     };
 
     let mensagem = {};
@@ -41,7 +41,7 @@ module.exports.index = (application, req, res) => {
                     alert : 'alert alert-success'
                 }];
                 break;
-            case 4:
+            case 3:
                 mensagem = [{
                     msg : "Entrada adiciona com sucesso",
                     alert : 'alert alert-success'
@@ -74,10 +74,10 @@ module.exports.index = (application, req, res) => {
             let numeroLinhas = result[0].num_rows;
             let quantidadePaginas;
 
-            if (numeroLinhas % 4 == 0) {
-                quantidadePaginas = numeroLinhas/4;
+            if (numeroLinhas % 3 == 0) {
+                quantidadePaginas = numeroLinhas/3;
             }else {
-                quantidadePaginas = Math.floor((numeroLinhas+4) / 4);
+                quantidadePaginas = Math.floor((numeroLinhas+3) / 3);
             }
 
             res.render('deposito/index', {validacao : mensagem, itens : resultItens, usuario : req.session.usuario, numeroLinhas : numeroLinhas, quantidadePaginas : quantidadePaginas});

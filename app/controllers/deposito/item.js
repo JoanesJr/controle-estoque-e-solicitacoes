@@ -89,7 +89,7 @@ module.exports.aumentarItem = (application, req, res) => {
         controle += parseInt(quantidade);
 
         modelItem.alterarQuantidadeItem(controle, id, (error, result) => {
-            res.redirect('/deposito?mensagem=4');
+            res.redirect('/deposito?mensagem=3');
         });
     });
 };
@@ -154,12 +154,12 @@ module.exports.pagina = (application, req, res) => {
     if (paginaDestino == 1) {
         limit = {
             inicio : 0,
-            final : 4
+            final : 3
         };
     }else {
         limit = {
-            inicio : paginaDestino * 4 - 4,
-            final : 4
+            inicio : paginaDestino * 3 - 3,
+            final : 3
         };
     
     }
@@ -171,10 +171,10 @@ module.exports.pagina = (application, req, res) => {
             let numeroLinhas = resultCount[0].num_rows;
             let quantidadePaginas;
 
-            if (numeroLinhas % 4 == 0) {
-                quantidadePaginas = numeroLinhas/4;
+            if (numeroLinhas % 3 == 0) {
+                quantidadePaginas = numeroLinhas/3;
             }else {
-                quantidadePaginas = Math.floor((numeroLinhas+4) / 4);
+                quantidadePaginas = Math.floor((numeroLinhas+3) / 3);
             }
 
             res.render('deposito/index', {validacao : {}, itens : resultItens, usuario : req.session.usuario, numeroLinhas : numeroLinhas, quantidadePaginas : quantidadePaginas});

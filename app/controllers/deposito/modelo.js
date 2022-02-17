@@ -9,7 +9,7 @@ module.exports.modelo = (application, req, res) => {
 
     let limit = {
         inicio : 0,
-        final : 8
+        final : 6
     };
 
     let mensagem = {};
@@ -54,10 +54,10 @@ module.exports.modelo = (application, req, res) => {
             let numeroLinhas = result[0].num_rows;
             let quantidadePaginas;
 
-            if (numeroLinhas % 8 == 0) {
-                quantidadePaginas = numeroLinhas/8;
+            if (numeroLinhas % 6 == 0) {
+                quantidadePaginas = numeroLinhas/6;
             }else {
-                quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
+                quantidadePaginas = Math.floor((numeroLinhas+6) / 6);
             }
 
             res.render('deposito/modelo/modelos', {modelos : resultPaginacao, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas, validacao : mensagem});
@@ -190,12 +190,12 @@ module.exports.pagina = (application, req, res) => {
     if (paginaDestino == 1) {
         limit = {
             inicio : 0,
-            final : 8
+            final : 6
         };
     }else {
         limit = {
-            inicio : paginaDestino * 8 - 8,
-            final : 8
+            inicio : paginaDestino * 6 - 6,
+            final : 6
         };
     
     }
@@ -209,10 +209,10 @@ module.exports.pagina = (application, req, res) => {
             let numeroLinhas = resultCount[0].num_rows;
             let quantidadePaginas;
 
-            if (numeroLinhas % 8 == 0) {
-                quantidadePaginas = numeroLinhas/8;
+            if (numeroLinhas % 6 == 0) {
+                quantidadePaginas = numeroLinhas/6;
             }else {
-                quantidadePaginas = Math.floor((numeroLinhas+8) / 8);
+                quantidadePaginas = Math.floor((numeroLinhas+6) / 6);
             }
 
             res.render('deposito/modelo/modelos', {modelos : result, usuario : usuario, numeroLinhas : numeroLinhas,  quantidadePaginas : quantidadePaginas, validacao : {}});
